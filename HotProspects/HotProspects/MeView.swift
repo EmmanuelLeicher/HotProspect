@@ -50,7 +50,7 @@ struct MeView: View {
                     .frame(width: 200, height: 200)
                     .contextMenu{
                         Button {
-                            let image = generateQRCode(from: "\(name)\n\(emailAddress)")
+                            let imageQRCode = generateQRCode(from: "\(name)\n\(emailAddress)")
                             let imageSaver = ImageSaver()
                             imageSaver.writeToPhotoAlbum(image: qrCode)
                         } label : {
