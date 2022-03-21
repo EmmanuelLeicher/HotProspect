@@ -1,4 +1,2 @@
 # EmmanuelLeicher
-# EmmanuelLeicher
-# HWS-HotProspect
-# HWS-HotProspect
+ hot prospect is a project 
