@@ -50,7 +50,7 @@ struct ProspectView: View {
             person.name = details[0]
             person.emailAdress = details[1]
             prospects.add(person)
-
+            
         case .failure(let error):
             print("Scanning failed: \(error.localizedDescription)")
         }
@@ -81,14 +81,15 @@ struct ProspectView: View {
             content.subtitle = prospect.emailAdress
             content.sound = UNNotificationSound.default
             
-            var dateComponents = DateComponents()
-            dateComponents.second = 10
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+            //            var dateComponents = DateComponents()
+            //            dateComponents.second = 10
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            
             
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             center.add(request)
         }
-
+        
         center.getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
                 addRequest()
@@ -103,7 +104,7 @@ struct ProspectView: View {
             }
         }
     }
-
+    
     
     var body: some View {
         NavigationView {
@@ -124,6 +125,8 @@ struct ProspectView: View {
                         label: {
                             Label("Mark contacted", systemImage: "person.crop.circle.fill.badge.checkmark")
                         }.tint(.blue)
+                            
+                            
                         }
                         else {
                             Button {
@@ -133,13 +136,16 @@ struct ProspectView: View {
                             Label("Mark uncontacted", systemImage: "person.crop.circle.badge.xmark")
                         }
                         .tint(.green)
+                            
+                            Button {
+                                addNotification(for: prospect)
+                            } label: {
+                                Label("Remind Me", systemImage: "bell")
+                            }
+                            .tint(.orange)
+
                         }
-                        Button {
-                            addNotification(for: prospect)
-                        } label: {
-                            Label("Remind Me", systemImage: "bell")
-                        }
-                        .tint(.orange)
+                        
                     }
                 }
             }
