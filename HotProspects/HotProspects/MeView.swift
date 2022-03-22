@@ -25,12 +25,15 @@ struct MeView: View {
         
         if let outputImage = filter.outputImage {
             if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
-                qrCode = UIImage(cgImage: cgimg)
-                return qrCode
+                return UIImage(cgImage: cgimg)
             }
         }
         return UIImage(systemName: "xmark.circle") ?? UIImage()
 
+    }
+    
+    func updateCode() {
+        qrCode = generateQRCode(from: "\(name)\n\(emailAddress)")
     }
     
     
@@ -43,14 +46,13 @@ struct MeView: View {
                 TextField("Email adress", text : $emailAddress)
                     .textContentType(.emailAddress)
                     .font(.title)
-                Image(uiImage: generateQRCode(from: "\(name)\n\(emailAddress)"))
+                Image(uiImage: qrCode)
                     .interpolation(.none)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
                     .contextMenu{
                         Button {
-                            let image = generateQRCode(from: "\(name)\n\(emailAddress)")
                             let imageSaver = ImageSaver()
                             imageSaver.writeToPhotoAlbum(image: qrCode)
                         } label : {
@@ -60,6 +62,13 @@ struct MeView: View {
                     }
 
             }.navigationTitle("Your code")
+                .onAppear(perform: updateCode)
+                .onChange(of: name) {
+                    _ in updateCode()
+                }
+                .onChange(of: emailAddress) {
+                    _ in updateCode()
+                }
         }
     }
 }
